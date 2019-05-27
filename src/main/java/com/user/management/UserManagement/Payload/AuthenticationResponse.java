@@ -2,21 +2,18 @@ package com.user.management.UserManagement.Payload;
 
 public class AuthenticationResponse {
 
-    private String status;
     private String response;
 
-    public AuthenticationResponse(String status, String response) {
-        this.status = status;
+
+    public AuthenticationResponse(String response) {
         this.response = response;
+
     }
 
-    public String getStatus() {
-        return status;
+    public AuthenticationResponse(){
+        super();
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public String getResponse() {
         return response;

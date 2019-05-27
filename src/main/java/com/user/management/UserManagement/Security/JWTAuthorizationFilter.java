@@ -1,11 +1,14 @@
 package com.user.management.UserManagement.Security;
 
+
+import com.user.management.UserManagement.Modals.JwtToken;
+import com.user.management.UserManagement.Repositories.JwtTokenRepo;
 import com.user.management.UserManagement.Utility.JwtTokenHandler;
-import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -22,8 +25,13 @@ import static com.user.management.UserManagement.Security.SecurityConstants.*;
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager) {
+
+    private JwtTokenHandler jwtTokenHandler;
+
+
+    public JWTAuthorizationFilter(AuthenticationManager authManager, JwtTokenHandler jwtTokenHandler) {
         super(authManager);
+        this.jwtTokenHandler = jwtTokenHandler;
     }
 
     @Override
@@ -48,15 +56,16 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(req, res);
     }
 
+
+
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request){
         String token = request.getHeader(HEADER_STRING);
 
         if (token != null) {
             // parse the token.
-
-            JwtTokenHandler jwtTokenHandler = new JwtTokenHandler();
             String user = jwtTokenHandler.parseJwtToken(token);
-                if (user != null) {
+            boolean isJwtTokenPresentInDb = jwtTokenHandler.isTokenPresentInDb(token);
+                if (user != null && isJwtTokenPresentInDb) {
                     return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
                 }
 

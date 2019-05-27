@@ -10,15 +10,15 @@ public class ApplicationUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-
+    @Column(unique = true)
     private String username;
 
     private String password;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name="user_role", joinColumns = @JoinColumn(name="user_id"))
-    private Set<Role> roles;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinTable(name="user_role", joinColumns = @JoinColumn(name="user_id"))
+//    private Set<Role> roles;
 
     public Long getId() {
         return id;
@@ -45,11 +45,20 @@ public class ApplicationUser {
     }
 
 
-    public Set<Role> getRoles() {
-        return roles;
+//    public Set<Role> getRoles() {
+//        return roles;
+//    }
+//
+
+    public ApplicationUser(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public ApplicationUser() {
+        super();
     }
+//    public void setRoles(Set<Role> roles) {
+//        this.roles = roles;
+//    }
 }

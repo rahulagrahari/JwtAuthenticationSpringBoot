@@ -1,6 +1,7 @@
 package com.user.management.UserManagement.Services;
 
 import com.user.management.UserManagement.Modals.ApplicationUser;
+import com.user.management.UserManagement.Repositories.JwtTokenRepo;
 import com.user.management.UserManagement.Repositories.RoleRepository;
 import com.user.management.UserManagement.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(ApplicationUser applicationUser) {
         applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
-        applicationUser.setRoles(new HashSet<>(roleRepository.findAll()));
-        userRepository.save(applicationUser);
+//        applicationUser.setRoles(new HashSet<>(roleRepository.findAll()));
+        try {
+            userRepository.save(applicationUser);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
